@@ -1,4 +1,8 @@
 #!/bin/bash
+path_current=$(cd "$(dirname "$0")"; pwd)
+name_current=$(basename "$0" .sh)
+echo $path_current
+echo $name_current
 
 user=$(whoami)
 echo "current user: $user"
@@ -47,3 +51,11 @@ fi
 echo "ready to stop firewalld" && systemctl stop firewalld && echo "success to stop firewalld"
 chmod a+x www/deskmgr/deskmgr  www/myapi/myapi
 docker-compose up -d
+if [[ $? -eq 0 ]]; then
+  read -p "do you want to init database.[y/Y]: " yes
+  if [ "$yes" = "y" ] || [ "$yes" = "Y" ]; then
+     db_file=$path_current/init.sql
+     docker exec -i mysql-prod sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < ${db_file} && echo "database reinit is ok"
+     docker-compose restart
+  fi
+fi
