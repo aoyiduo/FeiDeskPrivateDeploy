@@ -1,0 +1,30 @@
+httpPort = 11001
+sqlDebug = false
+ginDebug = false
+
+[init]
+port = 5735
+
+[account]
+port = 18320
+
+[device]
+port = 18321
+
+[natCheck]
+port1 = 5740
+port2 = 5741
+
+[hole]
+port = 5841
+
+[turn]
+port = 6951
+tokenSalt = "20210617"
+
+[mysql]
+host="mysql.mylocal.cn"
+port=3306
+user="root"
+password="FeiDesk@2022"
+db="myres"

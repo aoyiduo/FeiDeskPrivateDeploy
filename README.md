@@ -1,2 +1,2 @@
 # FeiDeskPrivateDeploy
-Fei Desk Private Deploy
+FeiDesk Privatization deployment

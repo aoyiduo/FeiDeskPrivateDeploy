@@ -1,0 +1,4 @@
+/*! 
+ Build based on gin-vue-admin 
+ Time : 1654909025000 */
+System.register(["../gva/gin-vue-admin-index-legacy.1654909025000.js"],(function(e){"use strict";var n,t,u,r,o,i,f,c,a;return{setters:[function(e){n=e.c,t=e.o,u=e.j,r=e.h,o=e.l,i=e.k,f=e.e,c=e.t,a=e.S}],execute:function(){var s={name:"AsyncSubmenu"};e("default",Object.assign(s,{props:{routerInfo:{default:function(){return null},type:Object}},setup:function(e){return function(s,l){var d=n("el-icon"),m=n("el-sub-menu");return t(),u(m,{ref:"subMenu",index:e.routerInfo.name},{title:r((function(){return[e.routerInfo.meta.icon?(t(),u(d,{key:0},{default:r((function(){return[(t(),u(o(e.routerInfo.meta.icon)))]})),_:1})):i("",!0),f("span",null,c(e.routerInfo.meta.title),1)]})),default:r((function(){return[a(s.$slots,"default")]})),_:3},8,["index"])}}}))}}}));

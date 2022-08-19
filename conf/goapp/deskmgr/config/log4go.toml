@@ -1,0 +1,8 @@
+fileCount = 7
+logLevel = "info"
+stackTrace = false
+maxSize = 100
+maxAge = 10
+maxBackups = 10
+console = false
+logPath = "logs/app.log"

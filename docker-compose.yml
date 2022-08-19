@@ -1,0 +1,104 @@
+version: '3'
+
+services:
+  mysql-prod:
+    image: mysql:5.7
+    container_name: mysql-prod
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./conf/mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
+      - ./conf/mysql/conf/timezone:/etc/timezone:ro
+      - ./data/data-prod:/var/lib/mysql      
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: FeiDesk@2022
+  
+  redis:
+    image: redis:3.2
+    restart: always
+    ports:
+      - 6379:6379
+
+  gateway:
+    build:
+      context: ./template/web
+      dockerfile: Dockerfile
+    image: aioweb:v1.0
+    restart: always
+    container_name: gateway
+    hostname: gateway
+    privileged: true
+    user: root
+    entrypoint: ["/bin/sh","-c","/usr/bin/supervisord --nodaemon"]
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - goapp:myapi
+    extra_hosts:
+      - abc.com:127.0.0.1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./conf/gateway/supervisord.d:/etc/supervisord.d
+      - ./conf/gateway/conf:/usr/local/openresty/nginx/conf
+      - ./www/my:/home/working/www/my
+      - ./www/myapi:/home/working/www/myapi
+      - ./data:/home/working/data
+      - ./data/logs/sys:/home/working/data/logs/sys
+      - ./data/logs/nginx:/home/working/data/logs/nginx
+      - ./data/logs/varlog:/var/log
+      - ./data/logs/varlog/supervisor:/var/log/supervisor
+  
+  goapp:
+    build:
+      context: ./template/goapp
+      dockerfile: Dockerfile
+    image: aiogo:v1.0
+    restart: always
+    container_name: goapp
+    hostname: goapp
+    privileged: true
+    user: root
+    command: ["/bin/sh","-c","/usr/bin/supervisord --nodaemon"]
+    ports:
+      - 8888:8888
+      - 5735:5735
+      - 18320:18320/udp
+      - 18320:18320/tcp
+      - 18321:18321/udp
+      - 18321:18321/tcp
+      - 5740:5740/udp
+      - 5740:5740/tcp
+      - 5741:5741/udp
+      - 5741:5741/tcp
+      - 5841:5841/udp
+      - 5841:5841/tcp
+      - 6951:6951/udp
+      - 6951:6951/tcp
+    links:
+      - mysql-prod:mysql.mylocal.cn
+      - redis:redis.mylocal.cn
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./conf/goapp/supervisord.d:/etc/supervisord.d
+      - ./www:/home/working/www
+      - ./conf/goapp/deskmgr/config:/home/working/www/deskmgr/config
+      - ./conf/goapp/myapi/config:/home/working/www/myapi/config
+      - ./conf/goapp/myapi/resource:/home/working/www/myapi/resource
+      - ./data:/home/working/data
+      - ./data/logs/sys:/home/working/data/logs/sys
+      - ./data/logs/varlog:/var/log
+      - ./data/logs/varlog/supervisor:/var/log/supervisor
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.61.0/24
+
