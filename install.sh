@@ -43,4 +43,6 @@ if [[ $? -ne 0 ]]; then
      ln -snf /usr/local/bin/docker-compose /usr/bin/docker-compose && \
      echo "success to install docker-compose"
 fi
+
+chmod a+x www/deskmgr/deskmgr  www/myapi/myapi
 docker-compose up -d
