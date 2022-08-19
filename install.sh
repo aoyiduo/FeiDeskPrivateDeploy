@@ -44,6 +44,8 @@ if [[ $? -ne 0 ]]; then
      echo "success to install docker-compose"
 fi
 
+systemctl status firewalld
+systemctl stop firewalld
 systemctl disable firewalld
 chmod a+x www/deskmgr/deskmgr  www/myapi/myapi
 docker-compose up -d
