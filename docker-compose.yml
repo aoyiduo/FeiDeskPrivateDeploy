@@ -15,8 +15,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: FeiDesk@2022
   
-  redis:
+  myredis:
     image: redis:3.2
+    container_name: myredis
     restart: always
     ports:
       - 6379:6379
@@ -79,7 +80,7 @@ services:
       - 6951:6951/tcp
     links:
       - mysql-prod:mysql.mylocal.cn
-      - redis:redis.mylocal.cn
+      - myredis:redis.mylocal.cn
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./conf/goapp/supervisord.d:/etc/supervisord.d
