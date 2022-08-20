@@ -81,6 +81,9 @@ services:
     links:
       - mysql-prod:mysql.mylocal.cn
       - myredis:redis.mylocal.cn
+    depends_on:
+      - mysql-prod
+      - myredis
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./conf/goapp/supervisord.d:/etc/supervisord.d
