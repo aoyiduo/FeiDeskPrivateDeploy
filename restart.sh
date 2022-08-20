@@ -12,9 +12,11 @@ if [ "$user" != "root" ]; then
 fi
 
 echo "ready to restart database."
-docker-compose restart mysql-prod
-docker-compose restart myredis
+docker-compose restart mysql-prod || docker-compose up -d mysql-prod
+docker-compose restart myredis || docker-compose up -d myredis
+echo "sleep 2 seconds and wait for the database to complete initialization"
+sleep 2
 echo "ready to restart app"
-docker-compose restart goapp
-docker-compose restart gateway
+docker-compose restart goapp || docker-compose up -d goapp
+docker-compose restart gateway || docker-compose up -d gateway
 

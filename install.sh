@@ -50,12 +50,18 @@ fi
 
 echo "ready to stop firewalld" && systemctl stop firewalld && echo "success to stop firewalld"
 chmod a+x www/deskmgr/deskmgr  www/myapi/myapi
-docker-compose up -d
-if [[ $? -eq 0 ]]; then
-  read -p "do you want to init database.[y/Y]: " yes
-  if [ "$yes" = "y" ] || [ "$yes" = "Y" ]; then
-     db_file=$path_current/init.sql
-     docker exec -i mysql-prod sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < ${db_file} && echo "database reinit is ok"
-     docker-compose restart
-  fi
+docker-compose down
+docker-compose up -d mysql-prod
+echo "sleep 5 seconds to wait for the database to complete initialization"
+sleep 5
+db_file=$path_current/init.sql
+db_init=0
+docker exec -i mysql-prod sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < ${db_file} && db_init=1
+if [[ $db_init -ne 0 ]]; then
+   echo "success to init database."
+else
+   echo -e "\e[1;33;41m failed to init database, retry againt or contact official on the official website: http://aoyiduo.cn \e[0m"
+   exit 1
 fi
+docker-compose up -d myredis
+docker-compose up -d 
